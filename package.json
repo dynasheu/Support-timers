@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/dynasheu/Support-timers#readme",
   "dependencies": {
-    "electron": "^7.1.4"
+    "electron": "^7.1.4",
+    "fomantic-ui": "^2.8.2",
+    "gulp": "^4.0.2"
   }
 }

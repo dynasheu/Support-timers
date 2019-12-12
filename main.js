@@ -4,6 +4,9 @@ const path =  require('path');
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
+// SET ENV
+// process.env.NODE_ENV =  'production';
+
 let mainWindow;
 let windowWidth = 350;
 
@@ -13,7 +16,7 @@ app.on('ready', function(){
     mainWindow = new BrowserWindow({
         width: windowWidth,
         height: 400,
-        resizable: false,
+        // resizable: false,
         maximizable: false,
         alwaysOnTop: true,
         // frame: false,
@@ -83,7 +86,7 @@ if(process.env.NODE_ENV !== 'production'){
         label:'Dev tools',
         submenu:[
             {
-                label:'toggle devtools',
+                label:'Toggle DevTools',
                 accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
                 click(item, focusedWindow){
                     focusedWindow.toggleDevTools();
