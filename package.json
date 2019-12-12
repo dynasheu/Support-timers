@@ -1,0 +1,22 @@
+{
+  "name": "support-timers",
+  "version": "0.1.0",
+  "description": "One timer at the time.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dynasheu/Support-timers.git"
+  },
+  "author": "Dynash",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/dynasheu/Support-timers/issues"
+  },
+  "homepage": "https://github.com/dynasheu/Support-timers#readme",
+  "dependencies": {
+    "electron": "^7.1.4"
+  }
+}
