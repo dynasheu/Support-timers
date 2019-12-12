@@ -1,0 +1,55 @@
+#toolbar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin-bottom: 1em;
+}
+/* #toolbar .grow {
+    padding-left: 0.5em;
+    font-weight: 900;
+    cursor: default;
+    text-align: center;
+}
+#toolbar .shrink {
+    -webkit-app-region: no-drag;
+} */
+.flex {
+    display: flex;
+}
+.grow {
+    flex-grow: 1;
+}
+.mypad {
+    padding: 0 1em;
+}
+.shrink {
+    flex-shrink: 1;
+}
+.cursorReset {
+    cursor: default;
+}
+i.notallowed {
+    color: lightgray;
+}
+.segment i:hover, #toolbar i:hover {
+    cursor: pointer;
+    color: red;
+}
+i:hover.notallowed {
+    cursor: not-allowed;
+    color: lightgray;
+}
+.ui.segment:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.ui.segment.started {
+    background-color:rgba(0, 181, 173, 1);
+    color: white;
+    font-weight: bold;
+}
+.ui.segment.started:hover {
+    background-color:rgba(0, 181, 173, 0.9);
+}
+body {
+    -webkit-user-select: none;
+}

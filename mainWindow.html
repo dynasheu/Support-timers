@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support timers</title>
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+</head>
+<body>
+    <div class="flex" id="toolbar">
+        <!-- <div class="grow">
+            Support timers
+        </div>
+        <div class="shrink" id="btnMinimize">
+            <div class="ui icon">
+                <i class="minus icon"></i>
+            </div>
+        </div>
+        <div class="shirnk" id="btnClose">
+            <div class="ui icon">
+                <i class="close icon"></i>
+            </div>
+        </div>
+        <div class="ui page dimmer">
+            <div class="content">
+                <div class="center">
+                    <div class="ui red button" id="btnShutdown"><i class="power icon"></i> Close</div>
+                    <div class="ui button" id="btnSave"><i class="save icon"></i> Save timers</div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="ui container">
+        <div class="ui fluid action left icon input">
+            <input id="inputName" type="text" placeholder="Timer name...">
+            <i class="stopwatch icon"></i>
+            <div id="inputButton" class="ui teal vertical animated button" tabindex="0">
+                <div class="hidden content">Add</div>
+                <div class="visible content">
+                    <i class="add icon"></i>
+                </div>
+            </div>
+            <div class="ui teal floating dropdown icon button">
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div id="inputEmail" class="item"><i class="envelope icon"></i> Email</div>
+                    <div id="inputPhone" class="item"><i class="phone icon"></i> Telephone</div>
+                    <div id="inputAdmin" class="item"><i class="chart line icon"></i> Administrative</div>
+                </div>
+            </div>
+        </div>
+        <div class="ui segments" id="timers">
+            <div class="ui segment" id="0">
+                <div class="flex">
+                    <div class="grow name cursorReset">Idle timer</div>
+                    <div class="shrink mypad cursorReset"><b class="elapsed">0</b><span> min</span></div>
+                    <div class="shrink"><i class="trash icon notallowed"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul></ul>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="semantic/semantic.min.js"></script>
+    <script>
+        // electron require
+        const electron = require('electron');
+        const{ipcRenderer, remote} = electron;
+
+        // function calulates time difference and adds previous elapsed time
+        function timerFunction(counter) {
+            const { start, elapsed } = counter;
+            if ( start ) {
+                return difference = new Date().getTime() - start + elapsed;
+            } else {
+                return elapsed;
+            }
+        };
+
+        // stop timer function
+        function stopTimer() {
+            let i;
+            for (i = 0; i < timer.length; i++) {
+                if (timer[i].start) {
+                    // calculate new elapsed and set start to 0
+                    timer[i].elapsed = timerFunction(timer[i]);
+                    timer[i].start = 0;
+                    // remove highlight for currently running timer
+                    document.getElementById(i).classList.toggle('started');
+                }
+            }
+        };
+
+        // create new row
+        function newTimerRow(newId) {
+            // create objects
+            const segmentDiv = Object.assign(document.createElement('div'), {
+                className: 'ui segment',
+                id: newId
+            });
+            const flexDiv =  Object.assign(document.createElement('div'), {
+                className: 'flex'
+            });
+            const nameDiv = Object.assign(document.createElement('div'), {
+                className: 'grow name cursorReset',
+                textContent: 'Timer name'
+            });
+            const mypadDiv = Object.assign(document.createElement('div'), {
+                className: 'shrink mypad cursorReset'
+            });
+            const elapsedB = Object.assign(document.createElement('b'), {
+                className: 'elapsed',
+                textContent: '0'
+            });
+            const minSpan = Object.assign(document.createElement('span'), {
+                textContent: ' min'
+            });
+            const iconDiv = Object.assign(document.createElement('div'), {
+                className: 'shrink'
+            });
+            const trashIcon = Object.assign(document.createElement('i'), {
+                className: 'trash icon'
+            });
+
+            // append obejcts
+            iconDiv.appendChild(trashIcon);
+            mypadDiv.appendChild(elapsedB);
+            mypadDiv.appendChild(minSpan);
+            flexDiv.appendChild(nameDiv);
+            flexDiv.appendChild(mypadDiv);
+            flexDiv.appendChild(iconDiv);
+            segmentDiv.appendChild(flexDiv);
+
+            return segmentDiv;
+        };
+
+        // create new timer
+        function newTimer(timerName) {
+            // check number of running counters
+            if ( timerCount() >= 10 ) {
+                document.activeElement.blur();
+                return;
+            };
+
+            // stop current timer
+            stopTimer();
+
+            // create new timer id
+            const newId = timer.length;
+
+            // add new timer to timer variable
+            timer = [...timer, {
+                name: timerName, 
+                start: new Date().getTime(), 
+                elapsed: 0,
+                show: true
+            }];
+
+            // set window size
+            setSize();
+
+            // append new titmer row
+            document.getElementById('timers').appendChild(newTimerRow(newId));
+
+            // set new timer name
+            document.getElementById(newId).getElementsByClassName('name')[0].textContent = timerName;
+
+            // highlight new timer since it is started
+            document.getElementById(newId).classList.toggle('started');
+
+            // add event listener for this timer
+            document.getElementById(newId).addEventListener('click', startTimer);
+            document.getElementById(newId).getElementsByClassName('trash')[0].addEventListener('click', hideTimer);
+
+            // defocus focused item and empty input field
+            document.getElementById('inputName').value = '';
+            document.activeElement.blur();
+        }
+
+        // start existing timer
+        function startTimer(e) {
+            
+            let timerId
+
+            if ( e == 0 ) {
+                timerId  = 0;
+            } else {
+                // id of clicked object
+                timerId = e.currentTarget.id;
+            }
+
+            if ( timer[timerId].start !== 0 ) {
+                // calculate new elapes time and set  start to 0
+                timer[timerId].elapsed = timerFunction(timer[timerId]);
+                timer[timerId].start = 0;
+
+                // start timer 0
+                timer[0].start = new Date().getTime();
+
+
+                // remove highlight from clicked timer
+                document.getElementById(timerId).classList.toggle('started');
+
+                // add highlight to timer 0
+                document.getElementById('0').classList.toggle('started');
+            } else {
+                // stop current timer
+                stopTimer();
+
+                // start clicked timer
+                timer[timerId].start = new Date().getTime();
+
+                // highlight clicked timer
+                document.getElementById(timerId).classList.toggle('started');
+            }
+        }
+
+        // hide not needed timer
+        function hideTimer(e) {
+            // id of clicked object
+            let timerId = e.currentTarget.parentNode.parentNode.parentNode.id
+
+            // remove event listenr for clicked timer
+            document.getElementById(timerId).removeEventListener('click', startTimer);
+            document.getElementById(timerId).getElementsByClassName('trash')[0].removeEventListener('click', hideTimer);
+
+            // start counter with different id
+            if (timer[timerId].start !== 0) {
+                startTimer(0);
+            }
+
+            // set show flag to false
+            timer[timerId].show = false;
+
+            // hide clicked timer
+            document.getElementById(timerId).style.display = "none";
+
+            // set window size
+            setSize();
+        }
+
+
+        // how many timers are shown
+        function timerCount() {
+            let timerCount = 0
+            for ( const {show} of timer) {
+                if ( show ) { timerCount++ } 
+            }
+
+            return timerCount;
+        }
+
+        // window size calculation
+        function setSize() {
+            // element sizes
+            let elementSize = 48;
+            let topSize = 29; //19 for frameless
+            let searchSize = 129;
+
+            // set new size and send to main
+            let sizeToSet = ((timerCount() - 1) * elementSize) + searchSize + topSize;
+            ipcRenderer.send('resize_window', sizeToSet);
+        };
+
+        // event listener for timer name inputs
+        document.getElementById('inputName').addEventListener('keypress', getName);
+        document.getElementById('inputButton').addEventListener('click', getName);
+        document.getElementById('inputEmail').addEventListener('click', getName);
+        document.getElementById('inputPhone').addEventListener('click', getName);
+        document.getElementById('inputAdmin').addEventListener('click', getName);
+
+        // create  timer name from events
+        function getName(e) {
+            let newName;
+            switch(e.currentTarget.id) {
+                case 'inputButton':
+                    newName = document.getElementById('inputName').value;
+                    if ( !newName ) { newName = "Timer " + timer.length };
+                    newTimer(newName);
+                    break;
+                case 'inputName':
+                    if (e.key === 'Enter') {
+                        newName = e.target.value;
+                        if ( !newName ) { newName = "Timer " + timer.length };
+                        newTimer(newName);
+                    }
+                    break; 
+                case 'inputEmail':
+                    newName = 'Email issue ' + timer.length;
+                    newTimer(newName);
+                    break;
+                case 'inputPhone':
+                    newName = 'Telephone call ' + timer.length;
+                    newTimer(newName);
+                    break;
+                case 'inputAdmin':
+                    newName = 'Administrative task ' + timer.length;
+                    newTimer(newName);
+                    break; 
+            };
+        };
+
+        // clear input field on focus
+        document.getElementById('inputName').addEventListener('focus', function() {
+            this.value = '';
+        });
+
+        // initial timer
+        var timer = [{
+            name: 'Idle timer', 
+            start: new Date().getTime(), 
+            elapsed: 0,
+            show: true
+        }];
+
+        // set window size
+        setSize();
+
+        // set name for first timer and set it to started
+        const firstTimer = document.getElementById("0");
+        // firstTimer.setAttribute("class", "ui segment started");
+        firstTimer.classList.toggle('started');
+        // add event listener for click
+        document.getElementById('0').addEventListener('click', startTimer);
+        // set name for first timer
+        firstTimer.getElementsByClassName('name')[0].textContent = timer[0].name;
+
+        // set elpased for all timers every second
+        var looper = setInterval(() => {
+            let i;
+            for(i = 0; i < timer.length; i++) {
+                let timerValue = Math.ceil(timerFunction(timer[i]) / 1000 / 60)
+                document.getElementById(i).getElementsByClassName('elapsed')[0].textContent = timerValue;
+            }
+        }, 1000);
+
+        // listenre for close and minimize buttons
+        // function init() { 
+        //     document.getElementById("btnMinimize").addEventListener("click", function (e) {
+        //         var window = remote.BrowserWindow.getFocusedWindow();
+        //         window.minimize(); 
+        //     });
+
+        //     document.getElementById("btnClose").addEventListener("click", function (e) {
+        //         var window = remote.BrowserWindow.getFocusedWindow();
+        //         window.close();
+        //     }); 
+        // };
+
+        // load jquery for Semantic UI
+        // window.onload = function(){
+        //     $('.ui.dropdown').dropdown({ transition: 'drop' });
+        //     // $('#btnClose').click(function(){ $('.ui.dimmer').dimmer("show") })           
+        // };
+        document.onreadystatechange = function () {
+            if (document.readyState == "complete") {
+                // init(); 
+                $('.ui.dropdown').dropdown({ transition: 'drop' });
+            }
+        };
+
+    </script>
+</body>
+</html>
