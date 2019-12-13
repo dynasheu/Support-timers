@@ -19,6 +19,7 @@
   "dependencies": {
     "electron": "^7.1.4",
     "fomantic-ui": "^2.8.2",
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "jquery": "^3.4.1"
   }
 }
