@@ -1,10 +1,14 @@
 {
   "name": "support-timers",
+  "productName": "Support timers",
   "version": "0.1.0",
   "description": "One timer at the time.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . support-timers --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Support timers\"",    
+    "package-linux": "electron-packager . support-timers --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
   "repository": {
     "type": "git",
@@ -21,5 +25,8 @@
     "fomantic-ui": "^2.8.2",
     "gulp": "^4.0.2",
     "jquery": "^3.4.1"
+  },
+  "devDependencies": {
+    "electron-packager": "^14.1.1"
   }
 }
