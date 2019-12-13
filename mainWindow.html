@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Support timers</title>
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.2/dist/semantic.min.css"> -->
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
@@ -236,7 +237,9 @@
             timer[timerId].show = false;
 
             // hide clicked timer
-            document.getElementById(timerId).style.display = "none";
+            // document.getElementById(timerId).style.display = "none";
+            var elem = document.getElementById(timerId);
+            elem.parentNode.removeChild(elem);
 
             // set window size
             setSize();
@@ -332,9 +335,11 @@
         var looper = setInterval(() => {
             let i;
             for(i = 0; i < timer.length; i++) {
-                let timerValue = Math.ceil(timerFunction(timer[i]) / 1000 / 60)
-                document.getElementById(i).getElementsByClassName('elapsed')[0].textContent = timerValue;
-            }
+                if ( timer[i].show  ) {
+                    let timerValue = Math.ceil(timerFunction(timer[i]) / 1000 / 60)
+                    document.getElementById(i).getElementsByClassName('elapsed')[0].textContent = timerValue;
+                };
+            };
         }, 1000);
 
         // listenre for close and minimize buttons

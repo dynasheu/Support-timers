@@ -53,3 +53,71 @@ i:hover.notallowed {
 body {
     -webkit-user-select: none;
 }
+
+
+.drop.transition {
+    -webkit-transform-origin: top center;
+            transform-origin: top center;
+    -webkit-animation-duration: 400ms;
+            animation-duration: 400ms;
+    -webkit-animation-timing-function: cubic-bezier(0.34, 1.61, 0.7, 1);
+            animation-timing-function: cubic-bezier(0.34, 1.61, 0.7, 1);
+  }
+  .drop.transition.in {
+    -webkit-animation-name: dropIn;
+            animation-name: dropIn;
+  }
+  .drop.transition.out {
+    -webkit-animation-name: dropOut;
+            animation-name: dropOut;
+  }
+  
+  /* Drop */
+  @-webkit-keyframes dropIn {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  @keyframes dropIn {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  @-webkit-keyframes dropOut {
+    0% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+  }
+  @keyframes dropOut {
+    0% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+  }

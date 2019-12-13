@@ -45,6 +45,7 @@ app.on('ready', function(){
     Menu.setApplicationMenu(mainMenu);
 });
 
+// get new windows size
 ipcMain.on('resize_window', (e, vertSize) => {
     // console.log(vertSize);
     mainWindow.setMinimumSize(windowWidth,vertSize)
