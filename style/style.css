@@ -53,9 +53,11 @@ i:hover.notallowed {
 body {
     -webkit-user-select: none;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
-
-.drop.transition {
+/* .drop.transition {
     -webkit-transform-origin: top center;
             transform-origin: top center;
     -webkit-animation-duration: 400ms;
@@ -70,10 +72,10 @@ body {
   .drop.transition.out {
     -webkit-animation-name: dropOut;
             animation-name: dropOut;
-  }
+  } */
   
   /* Drop */
-  @-webkit-keyframes dropIn {
+  /* @-webkit-keyframes dropIn {
     0% {
       opacity: 0;
       -webkit-transform: scale(0);
@@ -120,4 +122,4 @@ body {
       -webkit-transform: scale(0);
               transform: scale(0);
     }
-  }
+  } */

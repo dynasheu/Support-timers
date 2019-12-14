@@ -8,7 +8,8 @@
     <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
 <body>
-    <div class="flex" id="toolbar">
+    <div class="flex" id="toolbar"> <!-- this one is shere so padding on top looks right without fixing body in css -->
+        <!-- for frameless window. Button doe snot work as of right now will try to fix later -->
         <!-- <div class="grow">
             Support timers
         </div>
@@ -32,23 +33,33 @@
         </div> -->
     </div>
     <div class="ui container">
-        <div class="ui fluid action left icon input">
+        <div class="ui fluid action input">
+        <!-- <div class="ui fluid action left icon input"> -->
             <input id="inputName" type="text" placeholder="Timer name...">
-            <i class="stopwatch icon"></i>
-            <div id="inputButton" class="ui teal vertical animated button" tabindex="0">
+            <!-- <i class="stopwatch icon"></i> -->
+            <!-- <div id="inputButton" class="ui teal vertical animated button" tabindex="0">
                 <div class="hidden content">Add</div>
                 <div class="visible content">
                     <i class="add icon"></i>
                 </div>
-            </div>
-            <div class="ui teal floating dropdown icon button">
+            </div> -->
+            <!-- <div class="ui teal floating dropdown icon button">
                 <i class="dropdown icon"></i>
                 <div class="menu">
                     <div id="inputEmail" class="item"><i class="envelope icon"></i> Email</div>
                     <div id="inputPhone" class="item"><i class="phone icon"></i> Telephone</div>
                     <div id="inputAdmin" class="item"><i class="chart line icon"></i> Administrative</div>
                 </div>
-            </div>
+            </div> -->
+            <button id="inputEmail" class="ui icon button">
+                <i class="envelope icon"></i>
+            </button>
+            <button id="inputPhone" class="ui icon button">
+                <i class="phone icon"></i>
+            </button>
+            <button id="inputAdmin" class="ui icon button">
+                <i class="chart line icon"></i>
+            </button>
         </div>
         <div class="ui segments" id="timers">
             <div class="ui segment" id="0">
@@ -67,9 +78,10 @@
         const electron = require('electron');
         const{ipcRenderer, remote} = electron;
 
-        const jQuery = require('jquery')
-        const $ = jQuery
-        require('./semantic/dist/semantic.min.js')
+        // not using jquery anymore with differnet menu. 
+        // const jQuery = require('jquery')
+        // const $ = jQuery
+        // require('./semantic/dist/semantic.min.js')
 
         // function calulates time difference and adds previous elapsed time
         function timerFunction(counter) {
@@ -270,7 +282,7 @@
 
         // event listener for timer name inputs
         document.getElementById('inputName').addEventListener('keypress', getName);
-        document.getElementById('inputButton').addEventListener('click', getName);
+        // document.getElementById('inputButton').addEventListener('click', getName);
         document.getElementById('inputEmail').addEventListener('click', getName);
         document.getElementById('inputPhone').addEventListener('click', getName);
         document.getElementById('inputAdmin').addEventListener('click', getName);
@@ -342,8 +354,9 @@
             };
         }, 1000);
 
+        // frameless bugged
         // listenre for close and minimize buttons
-        // function init() { 
+        // function initFrameless() { 
         //     document.getElementById("btnMinimize").addEventListener("click", function (e) {
         //         var window = remote.BrowserWindow.getFocusedWindow();
         //         window.minimize(); 
@@ -360,12 +373,12 @@
         //     $('.ui.dropdown').dropdown({ transition: 'drop' });
         //     // $('#btnClose').click(function(){ $('.ui.dimmer').dimmer("show") })           
         // };
-        document.onreadystatechange = function () {
-            if (document.readyState == "complete") {
-                // init(); 
-                $('.ui.dropdown').dropdown({ transition: 'drop' });
-            }
-        };
+        // document.onreadystatechange = function () {
+        //     if (document.readyState == "complete") {
+        //         // initFrameless(); 
+        //         $('.ui.dropdown').dropdown({ transition: 'drop' });
+        //     }
+        // };
 
     </script>
 </body>
