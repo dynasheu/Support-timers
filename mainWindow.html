@@ -151,7 +151,7 @@
         };
 
         // create new timer
-        function newTimer(timerName) {
+        function newTimer(timerName, timerType = 'general') {
             // check number of running counters
             if ( timerCount() >= 10 ) {
                 document.activeElement.blur();
@@ -166,6 +166,7 @@
 
             // add new timer to timer variable
             timer = [...timer, {
+                type: timerType,
                 name: timerName, 
                 start: new Date().getTime(), 
                 elapsed: 0,
@@ -263,9 +264,25 @@
             let timerCount = 0
             for ( const {show} of timer) {
                 if ( show ) { timerCount++ } 
-            }
+            };
 
             return timerCount;
+        }
+
+        // count timers by type
+        function timerCountType(timerType) {
+            let timerCount =  0
+            for (const {type} of timer) {
+                if ( type == timerType ) { timerCount++ };
+            };
+
+            console.log(timerCount);
+            if (timerCount) {
+                return timerCount + 1;
+            } else {
+                return 1;
+            }
+
         }
 
         // window size calculation
@@ -291,29 +308,33 @@
         function getName(e) {
             let newName;
             switch(e.currentTarget.id) {
-                case 'inputButton':
-                    newName = document.getElementById('inputName').value;
-                    if ( !newName ) { newName = "Timer " + timer.length };
-                    newTimer(newName);
-                    break;
+                // case 'inputButton':
+                //     newName = document.getElementById('inputName').value;
+                //     if ( !newName ) { newName = "Timer " + timer.length };
+                //     newTimer(newName);
+                //     break;
                 case 'inputName':
                     if (e.key === 'Enter') {
                         newName = e.target.value;
-                        if ( !newName ) { newName = "Timer " + timer.length };
-                        newTimer(newName);
+                        if ( !newName ) {
+                            newName = "Timer " + timerCountType('general');
+                            newTimer(newName, 'general');
+                        } else {
+                            newTimer(newName, 'custom');
+                        }
                     }
                     break; 
                 case 'inputEmail':
-                    newName = 'Email issue ' + timer.length;
-                    newTimer(newName);
+                    newName = 'Email support ' + timerCountType('email');
+                    newTimer(newName, 'email');
                     break;
                 case 'inputPhone':
-                    newName = 'Telephone call ' + timer.length;
-                    newTimer(newName);
+                    newName = 'Telephone call ' + timerCountType('telephone');
+                    newTimer(newName, 'telephone');
                     break;
                 case 'inputAdmin':
-                    newName = 'Administrative task ' + timer.length;
-                    newTimer(newName);
+                    newName = 'Administrative task ' + timerCountType('administrative');
+                    newTimer(newName, 'administrative');
                     break; 
             };
         };
@@ -325,6 +346,7 @@
 
         // initial timer
         var timer = [{
+            type: 'idle',
             name: 'Idle timer', 
             start: new Date().getTime(), 
             elapsed: 0,
