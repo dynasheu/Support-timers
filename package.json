@@ -1,7 +1,7 @@
 {
   "name": "support-timers",
   "productName": "Support timers",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "One timer at the time.",
   "main": "main.js",
   "scripts": {
