@@ -6,8 +6,6 @@ Time tour saks one at the time. You can choose from differnet timer names or wri
 
 ![alt text](https://github.com/dynasheu/Support-timers/blob/master/screenshot.PNG "Support timers")
 
----
-
 ## To-Do list
 * read/save user settings
 * export timer data to file
